@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:  
+  db:
+      container_name: postgres
+      image: postgres:latest
+      environment:
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: admin123
+        PGDATA: /data/postgres
+        POSTGRES_DB: bank
+      volumes:
+        - db:/data/postgres
+        - ./sql:/sql
+      ports:
+        - "5332:5432"
+      networks:
+        - mynet
+      restart: unless-stopped
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  db:
