@@ -1,0 +1,4 @@
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT *
+FROM orders
+WHERE user_id = 9485;
