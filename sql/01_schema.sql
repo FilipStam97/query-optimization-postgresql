@@ -1,34 +1,30 @@
-BEGIN;
-
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users (
+CREATE TABLE customers (
     id BIGSERIAL PRIMARY KEY,
-    full_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    country TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    country VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE products (
     id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    category TEXT NOT NULL,
-    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
-    stock INTEGER NOT NULL CHECK (stock >= 0),
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    name VARCHAR(150) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    price NUMERIC(10, 2) NOT NULL
 );
 
 CREATE TABLE orders (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL REFERENCES users(id),
-    product_id BIGINT NOT NULL REFERENCES products(id),
-    status TEXT NOT NULL,
-    quantity INTEGER NOT NULL CHECK (quantity > 0),
-    total_amount NUMERIC(10,2) NOT NULL CHECK (total_amount >= 0),
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    customer_id BIGINT NOT NULL REFERENCES customers(id),
+    status VARCHAR(20) NOT NULL,
+    total NUMERIC(10, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
-COMMIT;
+CREATE TABLE order_items (
+    id BIGSERIAL PRIMARY KEY,
+    order_id BIGINT NOT NULL REFERENCES orders(id),
+    product_id BIGINT NOT NULL REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    price NUMERIC(10, 2) NOT NULL
+);
